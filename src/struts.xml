@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- struts2框架，配置系统常量 -->
+	<constant name="struts.i18n.encoding" value="utf-8"/>
+	<constant name="struts.custom.i18n.resources" value="messages"/>
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.multipart.maxSize" value="5000000"/>
+	<constant name="struts.multipart.saveDir" value="/tmp"/>
+	<!-- struts2框架，配置具体的控制层 -->	
+	<package name="ssh" namespace="/" extends="struts-default,json-default">
+		<action name="listStandard">
+			<result>list.jsp</result>
+		</action>
+		<action name="addStandard">
+			<result>add.jsp</result>
+		</action>
+		<action name="modifyStandard">
+			<result>update.jsp</result>
+		</action>
+		<action name="searchStandard" class="standardAction" method="searchStandardList">
+			<result name="success" type="json">
+				<param name="root">resultData</param>
+			</result>
+		</action>		
+		<action name="saveStandard" class="standardAction" method="saveStandard">
+			<result name="success" type="json">
+				<param name="root">resultData</param>
+			</result>
+		</action>		
+		<action name="judgeStandard" class="standardAction" method="judgeStandard">
+			<result name="success" type="json">
+				<param name="root">resultData</param>
+			</result>			
+		</action>		
+		<action name="deleteStandard" class="standardAction" method="deleteStandard">
+			<result name="success" type="json">
+				<param name="root">resultData</param>
+			</result>
+		</action>	
+		<action name="download" class="standardAction" method="downloadFile">
+        	<result name="success" type="stream"> 
+        		<!-- 指定被下载文件的文件类型 -->
+        		<param name="contentType">${mimeType}</param>
+        		<!-- 指定被下载文件名 -->
+        		<param name="contentDisposition">attachment;filename=${filename}</param> 
+        		<!-- 指定被下载文件的入口输入流 -->
+				<param name="inputName">inputStream</param>
+    		</result>  
+		</action>			
+		<action name="getStandard" class="standardAction" method="getStandardById">
+			<result name="success" type="json">
+				<param name="root">resultData</param>
+			</result>
+		</action>
+		<action name="updateStandard" class="standardAction" method="updateStandard">
+			<result name="success" type="json">
+				<param name="root">resultData</param>
+			</result>
+		</action>				
+	</package>	
+</struts>

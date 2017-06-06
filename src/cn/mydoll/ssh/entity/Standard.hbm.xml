@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.mydoll.ssh.entity.Standard" table="STANDARD">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" precision="10" scale="0" />
+            <generator class="sequence">
+            	<param name="sequence">STANDARD_ID</param>
+            </generator>
+        </id>
+        <property name="stdnum" type="java.lang.String">
+            <column name="STD_NUM" length="50">
+                <comment>标准号</comment>
+            </column>
+        </property>
+        <property name="zhname" type="java.lang.String">
+            <column name="ZHNAME" length="40">
+                <comment>中文名称</comment>
+            </column>
+        </property>
+        <property name="version" type="java.lang.String">
+            <column name="VERSION" length="10">
+                <comment>版本</comment>
+            </column>
+        </property>
+        <property name="keys" type="java.lang.String">
+            <column name="KEYS" length="50">
+                <comment>关键字/词</comment>
+            </column>
+        </property>
+        <property name="releasedate" type="java.util.Date">
+            <column name="RELEASE_DATE" length="7">
+                <comment>发布日期</comment>
+            </column>
+        </property>
+        <property name="impldate" type="java.util.Date">
+            <column name="IMPL_DATE" length="7">
+                <comment>实施日期</comment>
+            </column>
+        </property>
+        <property name="packagepath" type="java.lang.String">
+            <column name="PACKAGE_PATH" length="100">
+                <comment>附件的相对地址</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

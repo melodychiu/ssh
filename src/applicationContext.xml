@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	 xmlns:aop="http://www.springframework.org/schema/aop"
+	 xmlns:tx="http://www.springframework.org/schema/tx"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop.xsd     
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd">
+     <!-- spring框架，配置hibernate数据源。 -->
+     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+     	<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+     	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+     	<property name="username" value="mydoll"/>
+     	<property name="password" value="mydoll"/>
+     </bean>
+     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+     	<property name="dataSource" ref="dataSource"/>
+     	<property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+     </bean>
+     <!-- spring框架，IoC配置dao和service -->
+     <bean id="standardDao" class="cn.mydoll.ssh.dao.impl.StandardDaoImpl">
+     	<property name="sessionFactory" ref="sessionFactory"/>
+     </bean>
+     
+     <bean id="standardService" class="cn.mydoll.ssh.service.impl.StandardServiceImpl">
+     	<property name="standardDao" ref="standardDao"/>
+     </bean>
+     <!-- spring框架，整合struts框架 -->
+     <bean id="searchAction" class="cn.mydoll.ssh.action.StandardAction">
+     	<property name="standardService" ref="standardService"/>
+     </bean>
+     <!-- spring框架，整合struts框架。增删改的操作，使用用例模式；避免操作完成后界面无法查询到数据的情况 -->
+     <bean id="standardAction" class="cn.mydoll.ssh.action.StandardAction" scope="prototype">
+     	<property name="standardService" ref="standardService"/>
+     </bean>     
+     <!-- spring框架，AOP配置事务管理 -->
+     <bean id="txMgr" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+     	<property name="sessionFactory" ref="sessionFactory"/>
+     </bean>
+     <!-- spring框架，AOP配置 -->
+     <tx:advice id="txAdvice" transaction-manager="txMgr">
+     	<tx:attributes>
+     		<tx:method name="get*" read-only="true"/>
+     		<tx:method name="save*"/>
+     		<tx:method name="update*"/>
+     		<tx:method name="delete*"/>
+     		<tx:method name="*"/>
+     	</tx:attributes>
+     </tx:advice>
+     <!-- spring框架，切入点配置 -->
+     <aop:config>
+     	<aop:pointcut id="serviceMethod" expression="execution(* cn.mydoll.ssh.service..*(..))"/>
+     	<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod"/>
+     </aop:config>
+</beans>
